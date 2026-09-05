@@ -2496,74 +2496,73 @@
   </script>
 
 <script>
-// ── CARROSSÉIS: SETAS + DRAG TO PAUSE ──
+// ── CARROSSÉIS: SETAS + DRAG ──
 (function() {
-  function getTrack(carouselId) {
-    var container = document.getElementById(carouselId);
-    if (!container) return null;
-    return container.querySelector('.resultados__track, .depoimentos__track');
-  }
-
-  function getCurrentTranslateX(track) {
-    var style = window.getComputedStyle(track);
-    var matrix = style.transform || style.webkitTransform;
+  // Captura translateX atual (animação CSS ou inline)
+  function getCurrentX(track) {
+    var matrix = window.getComputedStyle(track).transform;
     if (!matrix || matrix === 'none') return 0;
-    var values = matrix.match(/matrix.*\((.+)\)/);
-    if (!values) return 0;
-    return parseFloat(values[1].split(', ')[4]) || 0;
+    var m = matrix.match(/matrix.*\((.+)\)/);
+    return m ? (parseFloat(m[1].split(', ')[4]) || 0) : 0;
   }
 
-  // SETAS
+  // Remove CSS animation e fixa posição atual — chame antes de qualquer controle manual
+  function takeover(track) {
+    if (track.dataset.manualMode) return; // já em modo manual
+    var x = getCurrentX(track);
+    track.dataset.manualMode = '1';
+    track.style.animation = 'none';
+    track.style.transform = 'translateX(' + x + 'px)';
+    return x;
+  }
+
+  function getTrack(id) {
+    var el = document.getElementById(id);
+    return el ? el.querySelector('.resultados__track, .depoimentos__track') : null;
+  }
+
+  // ── SETAS ──
   document.querySelectorAll('.carousel-arrow').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var carouselId = btn.getAttribute('data-carousel');
-      var dir = parseInt(btn.getAttribute('data-dir'));
-      var track = getTrack(carouselId);
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var track = getTrack(btn.getAttribute('data-carousel'));
       if (!track) return;
 
-      var currentX = getCurrentTranslateX(track);
-      track.style.animationPlayState = 'paused';
-      track.style.transform = 'translateX(' + currentX + 'px)';
+      var currentX = track.dataset.manualMode ? getCurrentX(track) : takeover(track) || 0;
+      if (!track.dataset.manualMode) { takeover(track); currentX = 0; }
 
-      var step = 300 * dir;
-      var newX = currentX - step;
+      var dir = parseInt(btn.getAttribute('data-dir')) || 1;
+      var newX = currentX - 300 * dir;
 
-      track.style.transition = 'transform 450ms cubic-bezier(0.32,0.72,0,1)';
+      track.style.transition = 'transform 420ms cubic-bezier(0.32,0.72,0,1)';
       track.style.transform = 'translateX(' + newX + 'px)';
-
-      setTimeout(function() { track.style.transition = ''; }, 460);
+      setTimeout(function() { track.style.transition = 'none'; }, 430);
     });
   });
 
-  // DRAG / TOUCH TO PAUSE + SCROLL
+  // ── DRAG / TOUCH ──
   ['resultados__track', 'depoimentos__track'].forEach(function(cls) {
-    var tracks = document.querySelectorAll('.' + cls);
-    tracks.forEach(function(track) {
-      var isDragging = false;
-      var startX = 0;
-      var startOffset = 0;
+    document.querySelectorAll('.' + cls).forEach(function(track) {
+      var dragging = false, startX = 0, startOffset = 0;
 
       function onDown(e) {
-        isDragging = true;
-        startX = (e.touches ? e.touches[0].clientX : e.clientX);
-        startOffset = getCurrentTranslateX(track);
-        track.style.animationPlayState = 'paused';
-        track.style.transform = 'translateX(' + startOffset + 'px)';
+        if (!track.dataset.manualMode) { takeover(track); }
+        dragging = true;
+        startX = e.touches ? e.touches[0].clientX : e.clientX;
+        startOffset = getCurrentX(track);
         track.style.transition = 'none';
         e.preventDefault();
       }
 
       function onMove(e) {
-        if (!isDragging) return;
-        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        var delta = clientX - startX;
-        track.style.transform = 'translateX(' + (startOffset + delta) + 'px)';
+        if (!dragging) return;
+        var cx = e.touches ? e.touches[0].clientX : e.clientX;
+        track.style.transform = 'translateX(' + (startOffset + cx - startX) + 'px)';
       }
 
       function onUp() {
-        if (!isDragging) return;
-        isDragging = false;
-        track.style.transition = '';
+        if (!dragging) return;
+        dragging = false;
       }
 
       track.addEventListener('mousedown', onDown);
