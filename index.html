@@ -72,7 +72,16 @@
   animation-play-state: paused !important;
 }
 
-    /* SHADER BACKGROUND */
+    /* SHADER BACKGROUND — fundo global fixo */
+    #global-shader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      opacity: 1;
+      pointer-events: none;
+    }
     .hero__shader-bg {
       position: absolute;
       inset: 0;
@@ -226,7 +235,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      background: var(--bg-void);
+      background: transparent;
       color: var(--text-primary);
       font-family: 'DM Sans', sans-serif;
       font-size: var(--text-base);
@@ -267,7 +276,7 @@
     /* =====================
        RESULTADOS REAIS
     ===================== */
-    .resultados { background: var(--bg-void); padding: var(--sp-16) 0; }
+    .resultados { background: rgba(10,10,10,0.72); padding: var(--sp-16) 0; }
     .resultados__header { text-align: center; margin-bottom: var(--sp-8); }
     .resultados__titulo {
       font-family: 'Barlow Condensed', sans-serif;
@@ -481,7 +490,7 @@
        HERO
     ===================== */
     .hero {
-      background: var(--bg-void);
+      background: transparent;
       padding-top: calc(88px + var(--sp-12));
       padding-bottom: var(--sp-12);
       min-height: 100svh;
@@ -492,14 +501,21 @@
     }
     .hero__video-bg {
       position: absolute;
-      inset: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center center;
-      object-position: center center;
+      object-position: center 30%;
       z-index: 0;
-      opacity: 0.50;
+      opacity: 0.60;
+    }
+    @media (max-width: 900px) {
+      .hero__video-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+      }
     }
     .hero__overlay {
       position: absolute;
@@ -561,7 +577,7 @@
        ESPELHO (DOR)
     ===================== */
     .espelho {
-      background: var(--bg-void);
+      background: rgba(10,10,10,0.65);
       padding: var(--sp-16) 0;
     }
     .espelho__inner {
@@ -605,7 +621,7 @@
        MÉTODO
     ===================== */
     .metodo {
-      background: var(--bg-surface);
+      background: rgba(18,18,18,0.75);
       padding: var(--sp-16) 0;
     }
     .metodo__header {
@@ -1571,6 +1587,7 @@
 </style>
 </head>
 <body>
+<canvas id="global-shader"></canvas>
 
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar" role="navigation" aria-label="Navegação principal">
@@ -2675,6 +2692,94 @@
 })();
 </script>
 
+<script>
+// ── GLOBAL SHADER BACKGROUND (WebGL — plasma roxo/azul nas seções) ──
+(function() {
+  var canvas = document.getElementById('global-shader');
+  if (!canvas) return;
+  var gl = canvas.getContext('webgl');
+  if (!gl) return;
+
+  var vs = gl.createShader(gl.VERTEX_SHADER);
+  gl.shaderSource(vs, 'attribute vec4 p; void main(){gl_Position=p;}');
+  gl.compileShader(vs);
+
+  var fsLines = [
+    'precision highp float;',
+    'uniform vec2 iResolution; uniform float iTime;',
+    'const float S=0.2,G=0.015,sc=5.0,lW=0.01,LW=0.2,lS=S,lA=1.0,lF=0.2,wS=0.2*S,wF=0.5,wA=1.0,oF=0.5,oS=1.33*S,mO=0.6,MO=2.0;',
+    'const int N=16;',
+    '#define circ(p,r,c) smoothstep(r+G,r,length(c-(p)))',
+    '#define sl(p,h,t) smoothstep(h,0.,abs(p-(t)))',
+    '#define cl(p,h,t) smoothstep(h+G,h,abs(p-(t)))',
+    'float rnd(float t){return(cos(t)+cos(t*1.3+1.3)+cos(t*1.4+1.4))/3.;}',
+    'float py(float x,float hf,float off){return rnd(x*lF+iTime*lS)*hf*lA+off;}',
+    'void main(){',
+    '  vec2 uv=gl_FragCoord.xy/iResolution.xy;',
+    '  vec2 sp=(gl_FragCoord.xy-iResolution.xy/2.)/iResolution.x*2.*sc;',
+    '  float hf=1.-(cos(uv.x*6.28)*.5+.5);',
+    '  float vf=1.-(cos(uv.y*6.28)*.5+.5);',
+    '  sp.y+=rnd(sp.x*wF+iTime*wS)*wA*(.5+hf);',
+    '  sp.x+=rnd(sp.y*wF+iTime*wS+2.)*wA*hf;',
+    '  vec4 c=mix(vec4(.1,.1,.3,1.),vec4(.3,.1,.5,1.),uv.x)*vf;',
+    '  c.a=1.;',
+    '  vec4 lc=vec4(.4,.2,.8,1.);',
+    '  for(int l=0;l<N;l++){',
+    '    float ot=iTime*oS,op=float(l)+sp.x*oF;',
+    '    float r=rnd(op+ot)*.5+.5;',
+    '    float hw=mix(lW,LW,r*hf)/2.;',
+    '    float off=rnd(op+ot*(1.+float(l)/float(N)))*mix(mO,MO,hf);',
+    '    float lp=py(sp.x,hf,off);',
+    '    float ln=sl(lp,hw,sp.y)/2.+cl(lp,hw*.15,sp.y);',
+    '    float cx=mod(float(l)+iTime*lS,25.)-12.;',
+    '    float ci=circ(vec2(cx,py(cx,hf,off)),.01,sp)*4.;',
+    '    c+=(ln+ci)*lc*r;',
+    '  }',
+    '  gl_FragColor=c;',
+    '}'
+  ];
+
+  var fs = gl.createShader(gl.FRAGMENT_SHADER);
+  gl.shaderSource(fs, fsLines.join('\n'));
+  gl.compileShader(fs);
+
+  var prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+
+  var pLoc = gl.getAttribLocation(prog, 'p');
+  var rLoc = gl.getUniformLocation(prog, 'iResolution');
+  var tLoc = gl.getUniformLocation(prog, 'iTime');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  var t0 = Date.now();
+  function render() {
+    var t = (Date.now() - t0) / 1000;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(prog);
+    gl.uniform2f(rLoc, canvas.width, canvas.height);
+    gl.uniform1f(tLoc, t);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.vertexAttribPointer(pLoc, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(pLoc);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+})();
+</script>
 
 </body>
 </html>
