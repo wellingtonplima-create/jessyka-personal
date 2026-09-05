@@ -835,28 +835,52 @@
     }
 
     /* WhatsApp Screenshot Cards */
+    /* CARROSSEL DE DEPOIMENTOS */
     .depoimentos {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      margin-bottom: var(--sp-8);
-      justify-items: center;
-    }
-    @media (min-width: 768px) {
-      .depoimentos { grid-template-columns: 1fr 1fr; }
-    }
-
-    .wa-card-wrap {
+      position: relative;
       width: 100%;
-      max-width: 380px;
-      opacity: 0;
-      transform: translateY(20px);
+      overflow: hidden;
+      margin-bottom: var(--sp-8);
     }
-    .wa-card-wrap.revealed {
+    /* Fade nas laterais */
+    .depoimentos::before,
+    .depoimentos::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .depoimentos::before {
+      left: 0;
+      background: linear-gradient(90deg, var(--bg-void) 0%, transparent 100%);
+    }
+    .depoimentos::after {
+      right: 0;
+      background: linear-gradient(270deg, var(--bg-void) 0%, transparent 100%);
+    }
+    /* Track animado */
+    .depoimentos__track {
+      display: flex;
+      gap: 1.25rem;
+      padding: 1rem 0 1.5rem;
+      animation: scrollDep 50s linear infinite;
+      width: max-content;
+    }
+    .depoimentos__track:hover {
+      animation-play-state: paused;
+    }
+    @keyframes scrollDep {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .wa-card-wrap {
+      flex-shrink: 0;
+      width: 340px;
       opacity: 1;
-      transform: translateY(0);
-      transition: opacity var(--duration-slow) var(--ease-out-expo),
-                  transform var(--duration-slow) var(--ease-out-expo);
+      transform: none;
     }
 
     .wa-card {
@@ -1913,6 +1937,8 @@
         </h2>
       </div>
       <div class="depoimentos" id="depoimentos-grid">
+  <div class="depoimentos__track">
+
 
         <!-- Card 1 — Lilyh -->
         <div class="wa-card-wrap" data-reveal-dep>
@@ -2058,7 +2084,157 @@
       <div class="prova__instagram">
         <a href="https://instagram.com/jessyka_rayara" target="_blank" rel="noopener noreferrer">Ver mais no Instagram @jessyka_rayara ↗</a>
       </div>
-    </div>
+    
+    <!-- Cópia para loop seamless -->
+
+
+        <!-- Card 1 — Lilyh -->
+        <div class="wa-card-wrap" data-reveal-dep>
+          <div class="wa-card">
+            <div class="wa-header">
+              <div class="wa-avatar">L</div>
+              <div class="wa-contact">
+                <span class="wa-name">Lilyh</span>
+                <span class="wa-handle">São João do Caru</span>
+              </div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-bubble">
+                <p class="wa-bubble-text">Oiii Jéssika, boa tarde eu estou gostando muito dos resultados que estou tendo, me adaptei rápido nos treinos, e sou muito grata a Deus e a você que sempre está me incentivando ❤️❤️❤️</p>
+                <div class="wa-time">13:51</div>
+              </div>
+            </div>
+          </div>
+          <div><span class="wa-badge">Me adaptei rápido nos treinos</span></div>
+        </div>
+
+        <!-- Card 2 — Josy Souza -->
+        <div class="wa-card-wrap" data-reveal-dep style="transition-delay: 120ms">
+          <div class="wa-card">
+            <div class="wa-header">
+              <div class="wa-avatar">J</div>
+              <div class="wa-contact">
+                <span class="wa-name">Josy Souza</span>
+                <span class="wa-handle">@josen_ildesilva</span>
+              </div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-bubble">
+                <p class="wa-bubble-text">Sim, mas graças a Deus e vc também, eu sempre falo para as pessoas de vc, sou grata a Deus por ele ter colocado vc no meu caminho, pq quando vc chegou, eu nao acreditava mas q seria possível mas, autoestima la em baixo e vc com esse seu jeito de trabalhar me mostrou q seria possível sim, e graças a Deus e vc, e meu esforços diários, estamos conseguindo ❤️</p>
+                <div class="wa-time">09:06</div>
+              </div>
+            </div>
+          </div>
+          <div><span class="wa-badge">Autoestima lá em baixo → estamos conseguindo</span></div>
+        </div>
+
+        <!-- Card 3 — Edu -->
+        <div class="wa-card-wrap" data-reveal-dep style="transition-delay: 240ms">
+          <div class="wa-card">
+            <div class="wa-header">
+              <div class="wa-avatar">E</div>
+              <div class="wa-contact">
+                <span class="wa-name">Edu</span>
+                <span class="wa-handle">CFA-Eduarlem EDU</span>
+              </div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-bubble">
+                <p class="wa-bubble-text">Oi, Jéssika! Tô gostando bastante dos treinos, viu? Tô indo sim, só ontem que acabei faltando. Mas já pode ir intensificando um pouco mais 💪 Quero aproveitar esse retorno e focar de verdade. Acredito que quando você voltar já vai dar pra perceber uma diferença boa 🙏</p>
+                <div class="wa-time">16:55</div>
+              </div>
+            </div>
+          </div>
+          <div><span class="wa-badge">Já pode ir intensificando mais</span></div>
+        </div>
+
+        <!-- Card 4 — Heva -->
+        <div class="wa-card-wrap" data-reveal-dep style="transition-delay: 360ms">
+          <div class="wa-card">
+            <div class="wa-header">
+              <div class="wa-avatar">H</div>
+              <div class="wa-contact">
+                <span class="wa-name">Heva</span>
+                <span class="wa-handle">Aluna São João / Goiânia</span>
+              </div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-bubble">
+                <p class="wa-bubble-text">Estou gostando muito certo que é o começo de um novo recomeço que ainda vem muita superação pela frente mas estou focada tentando fazer tudo do jeito que você manda os exercícios certinho estou amando o resultado poucos dias e já consegui eliminar peso</p>
+                <div class="wa-time">16:23</div>
+              </div>
+            </div>
+          </div>
+          <div><span class="wa-badge">Poucos dias e já eliminou peso</span></div>
+        </div>
+
+      
+        <!-- Card 7 - Emilly Cristina -->
+        <div class="wa-card-wrap" data-reveal-dep style="transition-delay: 420ms">
+          <div class="wa-card">
+            <div class="wa-header">
+              <div class="wa-avatar">E</div>
+              <div class="wa-contact">
+                <span class="wa-name">Emilly Cristina</span>
+                <span class="wa-handle">Aluna</span>
+              </div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-bubble">
+                <p class="wa-bubble-text">Me adaptei r&#225;pido, os treinos s&#227;o muito bons, eu tenho visto resultados rapidamente no meu corpo, a organiza&#231;&#227;o t&#225; mto boa, gostei muitoo. &#128153;</p>
+                <div class="wa-time">09:26</div>
+              </div>
+            </div>
+          </div>
+          <div><span class="wa-badge">Resultados visíveis rapidamente no corpo</span></div>
+        </div>
+
+        <!-- Card 8 - Rosanny Machado -->
+        <div class="wa-card-wrap" data-reveal-dep style="transition-delay: 480ms">
+          <div class="wa-card">
+            <div class="wa-header">
+              <div class="wa-avatar">R</div>
+              <div class="wa-contact">
+                <span class="wa-name">Rosanny Machado</span>
+                <span class="wa-handle">Aluna</span>
+              </div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-bubble">
+                <p class="wa-bubble-text">Parab&#233;ns Jessyka! Voc&#234; &#233; uma profissional incr&#237;vel que exerce sua profiss&#227;o com muito amor e dedica&#231;&#227;o. Seu exemplo nos ajuda a continuar em busca do melhor para a nossa sa&#250;de e bem estar. &#10084;&#65039;</p>
+                <div class="wa-time">21:18</div>
+              </div>
+            </div>
+          </div>
+          <div><span class="wa-badge">Profissional que trabalha com amor e dedicação</span></div>
+        </div>
+
+        <!-- Card 9 - Marisa -->
+        <div class="wa-card-wrap" data-reveal-dep style="transition-delay: 540ms">
+          <div class="wa-card">
+            <div class="wa-header">
+              <div class="wa-avatar">M</div>
+              <div class="wa-contact">
+                <span class="wa-name">Marisa</span>
+                <span class="wa-handle">Aluna</span>
+              </div>
+            </div>
+            <div class="wa-body">
+              <div class="wa-bubble">
+                <p class="wa-bubble-text">Oi Jessyka! Eu estou amando seus treinos, voc&#234; &#233; uma personal excelente. Eu tinha at&#233; desanimado, mas voc&#234; sempre conversa comigo e ent&#227;o me animei novamente e voltei a treinar. &#128591;&#10084;&#65039;&#10024;</p>
+                <div class="wa-time">13:53</div>
+              </div>
+            </div>
+          </div>
+          <div><span class="wa-badge">Me animei e voltei a treinar</span></div>
+        </div>
+</div>
+      <div class="prova__instagram">
+        <a href="https://instagram.com/jessyka_rayara" target="_blank" rel="noopener noreferrer">Ver mais no Instagram @jessyka_rayara ↗</a>
+      </div>
+    
+  </div>
+</div>
   </section>
 
   <!-- FAQ -->
