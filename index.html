@@ -86,7 +86,10 @@
 .hero__stats-strip {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background: var(--accent);
+  background: rgba(10,10,10,0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 8px;
   overflow: hidden;
   width: 100%;
@@ -94,7 +97,7 @@
 .hero__stats-item {
   padding: 1rem 0.75rem;
   text-align: center;
-  border-right: 1px solid rgba(255,255,255,0.2);
+  border-right: 1px solid rgba(255,255,255,0.1);
 }
 .hero__stats-item:last-child { border-right: none; }
 .hero__stats-value {
@@ -108,7 +111,7 @@
   font-size: 0.55rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.7);
   text-transform: uppercase;
   margin-top: 0.3rem;
 }
@@ -123,15 +126,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
-  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
+  color: var(--accent);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 800;
   text-align: center;
-  padding: 1.5rem 1rem 0.75rem;
-  letter-spacing: 0.04em;
+  padding: 1.5rem 1rem 0.85rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  text-shadow: 0 0 16px rgba(232,0,26,0.5);
 }
 </style></head><body>
 <!DOCTYPE html>
