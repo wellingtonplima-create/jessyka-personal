@@ -959,35 +959,101 @@
       margin-bottom: var(--sp-4);
       margin-top: auto;
     }
+    /* EM BREVE — bloco redesenhado */
     .formatos__em-breve {
-      background: #1A1A1A;
-      border: 1px dashed rgba(255,255,255,0.12);
-      border-radius: 8px;
-      padding: var(--sp-6) var(--sp-8);
-      margin-top: var(--sp-8);
-      text-align: center;
+      background: #111111;
+      border: 1px dashed rgba(232, 0, 26, 0.3);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
     }
-    .formatos__em-breve-label {
+    .em-breve__header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #E8001A;
+    }
+    .em-breve__icon {
+      width: 18px;
+      height: 18px;
+      color: #E8001A;
+    }
+    .em-breve__label {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 700;
-      font-size: var(--text-xs);
-      letter-spacing: 0.1em;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: #E8001A;
       text-transform: uppercase;
-      color: var(--text-secondary);
-      margin-bottom: var(--sp-4);
     }
-    .formatos__planos-futuros {
+    .em-breve__progress-track {
+      width: 100%;
+      max-width: 320px;
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+    @keyframes progress-sweep {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
+    .em-breve__progress-bar {
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, transparent, #E8001A, transparent);
+      border-radius: 1px;
+      animation: progress-sweep 2.5s ease-in-out infinite;
+    }
+    .em-breve__hint {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: #666666;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+    .em-breve__planos {
       display: flex;
-      gap: var(--sp-4);
-      justify-content: center;
+      gap: 0.75rem;
       flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 0.5rem;
     }
     .plano-futuro {
-      font-size: var(--text-sm);
-      color: var(--text-secondary);
-      border: 1px dashed rgba(255,255,255,0.15);
-      border-radius: 4px;
-      padding: 0.4rem 1rem;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 8px;
+      padding: 0.6rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      opacity: 0.55;
+      transition: opacity 200ms ease, border-color 200ms ease;
+    }
+    .plano-futuro:hover {
+      opacity: 0.75;
+      border-color: rgba(232,0,26,0.3);
+    }
+    .plano-futuro__nome {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #AAAAAA;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .em-breve__progress-bar {
+        animation: none;
+        transform: translateX(0);
+        width: 60%;
+        opacity: 0.4;
+      }
     }
     .formato-card .btn {
       width: 100%;
@@ -2031,11 +2097,27 @@
       </div>
 
       <div class="formatos__em-breve">
-        <p class="formatos__em-breve-label">Em breve</p>
-        <div class="formatos__planos-futuros">
-          <div class="plano-futuro">Plano Trimestral</div>
-          <div class="plano-futuro">Plano Semestral</div>
-          <div class="plano-futuro">Plano Anual</div>
+        <div class="em-breve__header">
+          <svg class="em-breve__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12,6 12,12 16,14"/>
+          </svg>
+          <span class="em-breve__label">EM BREVE</span>
+        </div>
+        <div class="em-breve__progress-track">
+          <div class="em-breve__progress-bar"></div>
+        </div>
+        <p class="em-breve__hint">Novos planos chegando</p>
+        <div class="em-breve__planos">
+          <div class="plano-futuro">
+            <span class="plano-futuro__nome">Trimestral</span>
+          </div>
+          <div class="plano-futuro">
+            <span class="plano-futuro__nome">Semestral</span>
+          </div>
+          <div class="plano-futuro">
+            <span class="plano-futuro__nome">Anual</span>
+          </div>
         </div>
       </div>
 
