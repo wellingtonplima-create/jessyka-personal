@@ -1673,6 +1673,65 @@
       .hero__photo-card { animation: none; opacity: 1; transform: none; }
       .numero-card.reveal-pending { opacity: 1; transform: none; transition: none; }
     }
+
+    /* === DELIGHT: browser surfaces === */
+
+    /* 1. Seleção de texto */
+    ::selection { background-color: #E8001A; color: #FFFFFF; }
+    ::-moz-selection { background-color: #E8001A; color: #FFFFFF; }
+
+    /* 2. Scrollbar customizada */
+    * { scrollbar-width: thin; scrollbar-color: #E8001A #111111; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #111111; }
+    ::-webkit-scrollbar-thumb { background-color: #E8001A; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background-color: #B00015; }
+
+    /* 3. Focus ring consistente */
+    :focus-visible { outline: 2px solid #E8001A; outline-offset: 3px; }
+    :focus:not(:focus-visible) { outline: none; }
+
+    /* 4. Links no rodapé — underline offset */
+    .rodape a { text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: rgba(232, 0, 26, 0.5); }
+    .rodape a:hover { text-decoration-color: #E8001A; }
+
+    /* 5. Caret color */
+    input, textarea { caret-color: #E8001A; }
+
+    /* 6. Navbar links — underline decorativo */
+    .navbar__links a { position: relative; }
+    .navbar__links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #E8001A;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .navbar__links a:hover::after { transform: scaleX(1); }
+
+    /* 7. Botão CTA — shimmer sutil ao hover */
+    @keyframes btn-shimmer {
+      0%   { transform: translateX(-100%) skewX(-20deg); }
+      100% { transform: translateX(250%) skewX(-20deg); }
+    }
+    .btn--primary { overflow: hidden; position: relative; }
+    .btn--primary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 40%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+      transform: translateX(-100%) skewX(-20deg);
+      transition: none;
+      pointer-events: none;
+    }
+    .btn--primary:hover::before { animation: btn-shimmer 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 </style>
 </head>
 <body>
